@@ -58,11 +58,11 @@ def set_interval(interval):
 entry = get_entrypoint()
 
 @set_interval(1)
-def update_ticker():
-    if len(webview.windows) > 0:
-        webview.windows[0].evaluate_js('window.pywebview.state && window.pywebview.state.set_ticker("%d")' % time())
+def update_ticker(window):
+    window.state.ticker = int(time())
 
 
 if __name__ == '__main__':
     window = webview.create_window('pywebview-react boilerplate', entry, js_api=Api())
-    webview.start(update_ticker, debug=True)
+    window.events.loaded += lambda: update_ticker(window)
+    webview.start()
